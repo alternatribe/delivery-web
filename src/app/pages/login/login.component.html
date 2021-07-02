@@ -1,0 +1,23 @@
+<div>
+  <form [formGroup]="formLogin" (ngSubmit)="login()">
+    <h1 class="h3 mb-3 fw-normal">Login</h1>
+
+    <div class="form-floating mb-3">
+      <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu email">
+      <label for="email">Email</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="pass" name="pass" placeholder="Digite sua senha">
+      <label for="pass">Senha</label>
+    </div>
+
+    <!-- <div class="checkbox mb-3">
+      <label>
+        <input type="checkbox" value="remember-me"> Esqueci minha senha
+      </label>
+    </div> -->
+    <br>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Entrar</button>
+  </form>
+
+</div>

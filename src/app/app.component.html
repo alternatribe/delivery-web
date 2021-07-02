@@ -1,0 +1,90 @@
+<header>
+  <div class="container-fluid fundo-topo p-2 d-sm-none d-md-block d-none d-sm-block">
+    <div class="row m-0">
+
+      <div class="col-auto p-0">
+        <a class="nav-link m-0 p-0" routerLink="">
+          <img class="m-0 p-0" src="../assets/logo.svg" alt="LOGO" />
+        </a>
+      </div>
+      <div class="col">
+        <div class="container-fluid h-100">
+          <div class="row h-auto">
+            NOME DA EMPRESA
+          </div>
+          <div class="row h">
+            <div class="col">1</div>
+            <div class="col">2</div>
+            <div class="col">3</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-auto p-0 d-flex align-content-center flex-wrap justify-content-center">
+        <a class="nav-link m-0 p-0" routerLink="">
+          <img class="m-0 p-0" src="../assets/app.png" alt="Baixe nosso aplicativo">
+        </a>
+      </div>
+    </div>
+  </div>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container-fluid">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarCollapse"
+        aria-controls="navbarCollapse"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="products">Cardápio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="contact">Fale Conosco</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav justify-content-end">
+          <li class="nav-item" *ngIf="!(isLogged$ | async)">
+            <a class="nav-link" routerLink="login">Entrar</a>
+          </li>
+          <li class="nav-item" *ngIf="isLogged$ | async">
+            <a class="nav-link" routerLink="login"><i class="bi bi-person-circle"></i>{{user.nome}}</a>
+          </li>
+          <div class="container-fluid d-sm-none d-md-block d-none d-sm-block">
+            <a class="navbar-brand" routerLink="order">
+              <i class="bi bi-basket3"></i>
+            </a>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+<main class="flex-shrink-0">
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</main>
+<footer class="footer mt-auto g-0 m-0 p-2 bg-light">
+  <div class="container-fluid">
+    <div class="row m-0">
+      <div class="col-8">
+        <p class="g-0 m-0 p-0">Nome da Empresa</p>
+        <p class="g-0 m-0 p-0">Endereço: XXX</p>
+        <p class="g-0 m-0 p-0">Telefone: (41) 3333-3333</p>
+        <p class="g-0 m-0 p-0">Whatzapp</p>
+      </div>
+      <div class="col-4"><p class="text-end">Siga-nos nas redes sociais e receba ofertas e cupons</p></div>
+    </div>
+  </div>
+</footer>
