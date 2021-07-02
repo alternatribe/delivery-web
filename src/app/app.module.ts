@@ -1,60 +1,41 @@
-import { ProductsComponent } from './pages/products/products.component';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { LoginModule } from './pages/login/login.module';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ShareModule } from './share/share.module';
 import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { ProductsComponent } from './pages/products/products.component';
 import { ContactComponent } from './pages/contact/contact.component';
-import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { AboutComponent } from './pages/about/about.component';
 
-import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
-import { environment } from 'src/environments/environment';
-import { StorageService } from './services/storage/storage.service';
-import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from './services/auth.service';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { OrderComponent } from './pages/order/order.component';
-import { ProfileComponent } from './pages/profile/profile.component';
-
-export function jwtOptionsFactory(storage: any) {
-  return {
-    allowedDomains: environment.allowedDomains,
-    tokenGetter: () => {
-      return storage.get('access_token');
-    }
-  }
-}
-
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    ContactComponent,
-    PageNotFoundComponent,
-    AboutComponent,
+    LoginComponent,
+    RegisterComponent,
+    ProfileComponent,
     ProductsComponent,
-    OrderComponent,
-    ProfileComponent
+    ContactComponent,
+    AboutComponent,
+    PageNotFoundComponent,
+    OrderComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
     ReactiveFormsModule,
-    ShareModule,
-    LoginModule,
-    JwtModule.forRoot({
-      jwtOptionsProvider: {
-        provide: JWT_OPTIONS,
-        useFactory: jwtOptionsFactory,
-        deps: [StorageService]
-      }
-    }),
+    HttpClientModule,
+    AppRoutingModule
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

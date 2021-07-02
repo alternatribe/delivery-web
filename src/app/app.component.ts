@@ -1,10 +1,6 @@
-import { Usuario } from './models/usuario.model';
-import { Observable } from 'rxjs';
-import { StorageService } from './services/storage/storage.service';
-import { Router } from '@angular/router';
-import { AuthService } from './services/auth/auth.service';
 import { Component } from '@angular/core';
-import * as _ from 'lodash';
+import { TokenStorageService } from './services/token-storage.service';
+import { environment } from '../environments/environment.prod';
 
 @Component({
   selector: 'app-root',
@@ -12,38 +8,32 @@ import * as _ from 'lodash';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'delivery-web';
-  isLogged$!: Observable<boolean>;
-  user: Usuario = new Usuario;
+  isLoggedIn: boolean = false;
+  username: string = "";
+  homeIsProducts: boolean = false;
 
-  constructor(
-    private auth: AuthService,
-    private router: Router,
-    private storage: StorageService
-  ) {
-    this.initializeApp();
-  }
+  constructor(private token: TokenStorageService) {}
 
-  async initializeApp() {
+  ngOnInit(): void {
+    if (environment.startPage === 'products') {
+      this.homeIsProducts = true;
+    }
 
-    await this.storage.init();
-    await this.auth.init();
+    if (this.token.getToken()) {
+      this.isLoggedIn = true;
+      this.username = this.token.getUser().name;
+    }
 
-    this.auth.authenticationState$.subscribe(autenticado => {
-      if (!autenticado && !this.router.url.endsWith('/') && !this.router.url.endsWith('/products') && !this.router.url.endsWith('/about') && !this.router.url.endsWith('/home') && !this.router.url.endsWith('/login')) {
-        this.logout();
-      }
+    this.token.isAuthenticate$.subscribe(auth => {
+      this.isLoggedIn = auth;
+      this.username = this.token.getUser().name;
     });
 
+    this.token.user$.subscribe(user => {
+      if (user) {
+        this.username = user.name;
+      }
+    });
   }
 
-  ngOnInit() {
-    this.isLogged$ = this.auth.isAuthenticated();
-    console.log("----> ", this.auth.userData);
-    this.user = this.auth.userData;
-  }
-
-  logout() {
-    this.router.navigateByUrl("login");
-  }
 }

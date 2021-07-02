@@ -3,16 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  mainEndpoint: 'http://localhost:8080/v1',
+  production: false,
   authEndpoint: 'http://localhost:8080',
-  allowedDomains: ['localhost:8080'],
-  defaultTimeout: 30000,
-  serviceWorker: false,
-  googleMapsApiKey: 'AIzaSyB1ue022ZmydjoVFaGx33J9qfuukEAVWMQ',
-  firebaseConfig: null,
-  apiVersion: 1,
-  dbVersion: 0,
-  production: false
+  startPage: 'products'
 };
 
 /*

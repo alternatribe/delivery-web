@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-home',
   template: ''
 })
 export class HomeComponent implements OnInit {
-  private startPage: string = "";
+  private startPage: string = environment.startPage;
 
   constructor(private router: Router) { }
 

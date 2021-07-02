@@ -63,5 +63,3 @@ import 'zone.js';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
-/** IE11 compatibility */
-import 'url-polyfill';

@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  allowedDomains: ['localhost:8080']
+  authEndpoint: 'http://localhost:8080',
+  startPage: 'products'
 };
