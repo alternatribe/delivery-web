@@ -16,6 +16,8 @@ import { AboutComponent } from './pages/about/about.component';
 import { AuthService } from './services/auth.service';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { OrderComponent } from './pages/order/order.component';
+import { MyOrdersComponent } from './pages/my-orders/my-orders.component';
+import { AuthGuard } from './services/auth.guard';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,7 +29,8 @@ import { OrderComponent } from './pages/order/order.component';
     ContactComponent,
     AboutComponent,
     PageNotFoundComponent,
-    OrderComponent
+    OrderComponent,
+    MyOrdersComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +38,7 @@ import { OrderComponent } from './pages/order/order.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [AuthService],
+  providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

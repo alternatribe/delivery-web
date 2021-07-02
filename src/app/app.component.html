@@ -52,14 +52,19 @@
           <li class="nav-item" *ngIf="!isLoggedIn">
             <a class="nav-link" routerLink="register">Criar Conta</a>
           </li>
-          <li class="nav-item" *ngIf="isLoggedIn">
-            <a class="nav-link p-0" routerLink="profile"><i class="bi bi-person-circle fs-4 pe-2"></i>{{username}}</a>
+          <li class="nav-item dropdown" *ngIf="isLoggedIn">
+            <a class="nav-link dropdown-toggle p-0" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><i class="bi bi-person-circle fs-4 pe-2"></i>{{username}}</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" routerLink="profile">Perfil</a></li>
+              <li><a class="dropdown-item" routerLink="myorders">Minhas Compras</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" routerLink="" (click)="logout()">Sair</a></li>
+            </ul>
           </li>
           <li class="nav-item">
             <a class="nav-link p-0 ps-4" routerLink="order"><i class="bi bi-basket3 fs-3 text-white"></i></a>
           </li>
         </ul>
-
       </div>
     </div>
   </nav>
