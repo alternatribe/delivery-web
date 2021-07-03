@@ -4,7 +4,7 @@
 
       <div class="col-auto p-0">
         <a class="nav-link m-0 p-0" href="">
-          <img class="m-0 p-0" src="../assets/logo.svg" alt="LOGO" />
+          <img class="m-0 p-0" src="../assets/logo.png" alt="LOGO" />
         </a>
       </div>
       <div class="col">
@@ -27,7 +27,7 @@
         <span class="ps-2">{{nomeEmpresa | uppercase}}</span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <ul class="navbar-nav me-auto mb-0 mb-md-0">
           <li class="nav-item" *ngIf="!homeIsProducts">
             <a class="nav-link" routerLink="">Home</a>
           </li>
@@ -49,16 +49,30 @@
             <a class="nav-link" routerLink="register">Criar Conta</a>
           </li>
           <li class="nav-item dropdown" *ngIf="isLoggedIn">
-            <a class="nav-link dropdown-toggle p-0" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><i class="bi bi-person-circle fs-4 pe-2"></i>{{username}}</a>
-            <ul class="dropdown-menu">
+            <span class="d-none d-md-block">
+              <a class="nav-link dropdown-toggle p-0" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><i class="bi bi-person-circle fs-3 pe-2 align-middle"></i>{{username}}</a>
+                          <ul class="dropdown-menu">
               <li><a class="dropdown-item" routerLink="profile">Perfil</a></li>
               <li><a class="dropdown-item" routerLink="myorders">Minhas Compras</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" routerLink="" (click)="logout()">Sair</a></li>
             </ul>
+            </span>
+            <span class="d-md-none">
+              <a class="nav-link dropdown-toggle p-0 pt-2" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{username}}</a>
+                          <ul class="dropdown-menu">
+              <li><a class="dropdown-item" routerLink="profile">Perfil</a></li>
+              <li><a class="dropdown-item" routerLink="myorders">Minhas Compras</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" routerLink="" (click)="logout()">Sair</a></li>
+            </ul>
+            </span>
           </li>
-          <li class="nav-item">
+          <li class="nav-item collapse navbar-collapse">
             <a class="nav-link p-0 ps-4" routerLink="order"><i class="bi bi-basket3 fs-3 text-white"></i></a>
+          </li>
+          <li class="nav-item p-0 border-0 d-md-none" [ngClass]="{'pt-2 ': isLoggedIn}">
+            <a class="nav-link" routerLink="order">Meu Pedido</a>
           </li>
         </ul>
       </div>
@@ -71,14 +85,13 @@
   </div>
 </main>
 <footer class="footer mt-auto g-0 m-0 p-2 bg-secondary">
-  <div class="container-fluid">
-    <div class="row m-0">
-      <div class="col-8">
-        <p class="g-0 m-0 p-0"><b>{{nomeEmpresa}}</b></p>
-        <p class="g-0 m-0 p-0">Endereço: {{enderecoEmpresa}}</p>
-        <p class="g-0 m-0 p-0">Telefone: {{telefoneEmpresa}}</p>
-      </div>
-      <div class="col-4"><p class="text-end">Siga-nos nas redes sociais e receba ofertas e cupons</p></div>
+  <div class="d-flex flex-wrap">
+    <div class="p-2 flex-grow-1 bd-highlight">
+      <p class="g-0 m-0 p-0"><b>{{nomeEmpresa}}</b></p>
+      <p class="g-0 m-0 p-0">Endereço: {{enderecoEmpresa}}</p>
+      <p class="g-0 m-0 p-0">Telefone: {{telefoneEmpresa}}</p>
     </div>
+    <div class="p-2 d-block d-sm-none">Siga-nos nas redes sociais e receba ofertas e cupons</div>
+    <div class="p-2 text-end d-none d-sm-block">Siga-nos nas redes sociais e receba ofertas e cupons</div>
   </div>
 </footer>
