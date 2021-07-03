@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { TokenStorageService } from './services/token-storage.service';
-import { environment } from '../environments/environment.prod';
+import { AuthService } from './services/auth.service';
+import { environment } from '../environments/environment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -8,36 +9,43 @@ import { environment } from '../environments/environment.prod';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  nomeEmpresa: string = "";
+  enderecoEmpresa: string = "";
+  telefoneEmpresa: string = "";
   isLoggedIn: boolean = false;
   username: string = "";
   homeIsProducts: boolean = false;
 
-  constructor(private token: TokenStorageService) {}
+  constructor(private authService: AuthService, private router: Router) {
+    this.nomeEmpresa = environment.nomeEmpresa;
+    this.enderecoEmpresa = environment.enderecoEmpresa;
+    this.telefoneEmpresa = environment.telefoneEmpresa;
+  }
 
   ngOnInit(): void {
     if (environment.startPage === 'products') {
       this.homeIsProducts = true;
     }
 
-    if (this.token.getToken()) {
+    if (this.authService.isLogged()) {
       this.isLoggedIn = true;
-      this.username = this.token.getUser().name;
+      this.username = this.authService.getUser().name;
     }
 
-    this.token.isAuthenticate$.subscribe(auth => {
+    this.authService.isAuthenticate$.subscribe(auth => {
+      console.log(auth);
       this.isLoggedIn = auth;
-      this.username = this.token.getUser().name;
-    });
-
-    this.token.user$.subscribe(user => {
-      if (user) {
-        this.username = user.name;
+      if (this.authService.isLogged()) {
+        this.isLoggedIn = true;
+        this.username = this.authService.getUser().name;
       }
     });
+
   }
 
   logout() {
-    this.token.signOut();
+    this.authService.logout();
+    this.router.navigateByUrl("home");
   }
 
 }

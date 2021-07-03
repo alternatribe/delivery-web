@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { first } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { TokenStorageService } from '../../services/token-storage.service';
+import { StorageService } from '../../services/storage.service';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -19,7 +18,7 @@ export class LoginComponent implements OnInit{
   error = "";
 
 
-  constructor(private authService: AuthService, private router: Router, private tokenStorage: TokenStorageService) {
+  constructor(private authService: AuthService, private router: Router) {
     if (environment.production) {
       this.form = new FormGroup({
         email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(128)]),
@@ -35,8 +34,8 @@ export class LoginComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    if (this.tokenStorage.getToken()) {
-      this.tokenStorage.signOut();
+    if (this.authService.isLogged()) {
+      this.authService.logout();
     }
   }
 
@@ -50,11 +49,7 @@ export class LoginComponent implements OnInit{
     }
     this.isLoading = true;
     this.authService.login(this.f.email.value, this.f.password.value).subscribe(
-      data => {
-        //console.log(data);
-
-        this.tokenStorage.saveToken(data.accessToken);
-        this.tokenStorage.saveUser(data);
+      () => {
         this.isLoading = true;
         this.router.navigateByUrl("home");
       },
