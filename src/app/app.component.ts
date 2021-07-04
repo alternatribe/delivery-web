@@ -36,7 +36,6 @@ export class AppComponent {
     }
 
     this.authService.isAuthenticate$.subscribe(auth => {
-      console.log(auth);
       this.isLoggedIn = auth;
       if (this.authService.isLogged()) {
         this.isLoggedIn = true;

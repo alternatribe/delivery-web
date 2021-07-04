@@ -18,12 +18,14 @@
     "@angular/platform-browser": "~12.0.0",
     "@angular/platform-browser-dynamic": "~12.0.0",
     "@angular/router": "~12.0.0",
+    "@auth0/angular-jwt": "^5.0.2",
     "@popperjs/core": "^2.9.2",
     "@types/lodash": "^4.14.170",
     "bootstrap": "^5.0.2",
     "bootstrap-icons": "^1.5.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
+    "url-polyfill": "^1.1.12",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

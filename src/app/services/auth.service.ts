@@ -5,6 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { StorageService } from './storage.service';
 import { tap } from 'rxjs/operators';
 import { User } from '../models/user.model';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -22,10 +23,14 @@ export class AuthService {
 
   private user: User = new User();
 
-  constructor(private http: HttpClient, private storageService: StorageService) { }
+  constructor(private http: HttpClient, private storageService: StorageService, private jwtHelper: JwtHelperService) { }
 
   isLogged() {
-    return (this.storageService.getToken()) ? true : false;
+    const token = this.storageService.getToken();
+    if (token && !this.jwtHelper.isTokenExpired(token)) {
+      return true;
+    }
+    return false;
   }
 
   login(email: string, password: string): Observable<any> {
@@ -34,8 +39,8 @@ export class AuthService {
       password
     }, httpOptions)
       .pipe((tap((data: any) => {
+        this.user = this.jwtHelper.decodeToken(data.token);
         this.storageService.saveToken(data.token);
-        this.storageService.saveUser(data);
         this._authenticate.next(true);
       })));
   }
@@ -54,7 +59,11 @@ export class AuthService {
   }
 
   getUser() {
-    return this.storageService.getUser();
+    const token = this.storageService.getToken();
+    if (token) {
+      return this.jwtHelper.decodeToken(token);
+    }
+    return null;
   }
 
   getToken() {

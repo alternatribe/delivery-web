@@ -19,6 +19,23 @@ import { OrderComponent } from './pages/order/order.component';
 import { MyOrdersComponent } from './pages/my-orders/my-orders.component';
 import { AuthGuard } from './services/auth.guard';
 import { RolePipe } from './share/role.pipe';
+import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { environment } from '../environments/environment.prod';
+import { StorageService } from './services/storage.service';
+
+registerLocaleData(localePt);
+
+export function jwtOptionsFactory(storage: { get: (arg0: string) => any; }) {
+  return {
+    allowedDomains: environment.allowedDomains,
+    tokenGetter: () => {
+      return storage.get('access_token');
+    }
+  }
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +55,14 @@ import { RolePipe } from './share/role.pipe';
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    JwtModule.forRoot({
+      jwtOptionsProvider: {
+        provide: JWT_OPTIONS,
+        useFactory: jwtOptionsFactory,
+        deps: [StorageService]
+      }
+    }),
   ],
   providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent]
