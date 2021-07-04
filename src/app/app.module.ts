@@ -18,6 +18,7 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { OrderComponent } from './pages/order/order.component';
 import { MyOrdersComponent } from './pages/my-orders/my-orders.component';
 import { AuthGuard } from './services/auth.guard';
+import { RolePipe } from './share/role.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +31,8 @@ import { AuthGuard } from './services/auth.guard';
     AboutComponent,
     PageNotFoundComponent,
     OrderComponent,
-    MyOrdersComponent
+    MyOrdersComponent,
+    RolePipe
   ],
   imports: [
     BrowserModule,

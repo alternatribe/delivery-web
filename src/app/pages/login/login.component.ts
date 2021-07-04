@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit{
       });
     } else {
       this.form = new FormGroup({
-        email: new FormControl('funcionario1@email.com', [Validators.required, Validators.email, Validators.maxLength(128)]),
+        email: new FormControl('cliente1@email.com', [Validators.required, Validators.email, Validators.maxLength(128)]),
         password: new FormControl('123456', [Validators.required, Validators.minLength(6), Validators.maxLength(128)])
       });
 

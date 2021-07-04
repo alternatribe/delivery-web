@@ -4,23 +4,9 @@
       <strong>{{ currentUser.name }}</strong> Profile
     </h3>
   </header>
-  <p>
-    <strong>Token:</strong>
-    {{ currentUser.accessToken.substring(0, 20) }} ...
-    {{ currentUser.accessToken.substr(currentUser.accessToken.length - 20) }}
-  </p>
-  <p>
-    <strong>Email:</strong>
-    {{ currentUser.email }}
-  </p>
-  <strong>Roles:</strong>
-  <ul>
-    <li *ngFor="let role of currentUser.roles">
-      {{ role }}
-    </li>
-  </ul>
+  <p><strong>Token:</strong> {{ token }}</p>
+  <p><strong>Email:</strong> {{ currentUser.email }}</p>
+  <p><strong>Role:</strong> {{ currentUser.role | role }}</p>
 </div>
 
-<ng-template #loggedOut>
-  Please login.
-</ng-template>
+<ng-template #loggedOut> Please login. </ng-template>

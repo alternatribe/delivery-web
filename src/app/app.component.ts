@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { environment } from '../environments/environment';
 import { Router } from '@angular/router';
+import { RoleEnum } from './models/role.enum';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +10,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
   nomeEmpresa: string = "";
   enderecoEmpresa: string = "";
   telefoneEmpresa: string = "";
   isLoggedIn: boolean = false;
-  username: string = "";
   homeIsProducts: boolean = false;
+
+  username: string = "";
 
   constructor(private authService: AuthService, private router: Router) {
     this.nomeEmpresa = environment.nomeEmpresa;
@@ -46,6 +49,10 @@ export class AppComponent {
   logout() {
     this.authService.logout();
     this.router.navigateByUrl("home");
+  }
+
+  isClient() {
+    return this.authService.getUser().role === RoleEnum.ROLE_CLIENT;
   }
 
 }

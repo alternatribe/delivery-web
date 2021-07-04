@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment.prod';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { StorageService } from './storage.service';
 import { tap } from 'rxjs/operators';
+import { User } from '../models/user.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -19,6 +20,8 @@ export class AuthService {
   private _authenticate = new BehaviorSubject<boolean>(false);
   isAuthenticate$ = this._authenticate.asObservable();
 
+  private user: User = new User();
+
   constructor(private http: HttpClient, private storageService: StorageService) { }
 
   isLogged() {
@@ -31,7 +34,7 @@ export class AuthService {
       password
     }, httpOptions)
       .pipe((tap((data: any) => {
-        this.storageService.saveToken(data.accessToken);
+        this.storageService.saveToken(data.token);
         this.storageService.saveUser(data);
         this._authenticate.next(true);
       })));

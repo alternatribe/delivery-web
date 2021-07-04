@@ -1,5 +1,9 @@
+import { RoleEnum } from './role.enum';
+import { Address } from './address.model';
 export class User {
-  email?: string
-  name?: string
-  password?: string
+  id!: string;
+  name!: string;
+  email!: string;
+  role!: RoleEnum;
+  address!: Address[];
 }
