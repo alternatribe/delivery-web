@@ -5,6 +5,7 @@ import { UserService } from '../../services/user.service';
 import { FormGroup, FormBuilder, FormControl, Validators, AbstractControl } from '@angular/forms';
 import PasswordValidator from '../../share/password.validator';
 import { ModalService } from '../../share/modal/modal.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class ProfileComponent implements OnInit {
   error = "";
   bodyText: string = "";
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private userService: UserService, private modalService: ModalService) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private userService: UserService, private modalService: ModalService) {
     this.form = new FormGroup({
       fullname: new FormControl('', [Validators.required, Validators.maxLength(128)]),
       email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(128)]),
@@ -81,6 +82,20 @@ export class ProfileComponent implements OnInit {
         }
         this.isLoading = false;
       })
+  }
+
+  onExcluir() {
+    this.userService.delete(this.currentUser.id).subscribe(
+      () => {
+        this.authService.logout();
+        this.router.navigateByUrl("home");
+        this.isLoading = false;
+      },
+      () => {
+
+        this.isLoading = false;
+      }
+    )
   }
 
   onReset(): void {

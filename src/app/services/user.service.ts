@@ -19,7 +19,7 @@ export class UserService {
   }
 
   update(id: string, name: string, email: string, password: string, newPassword: string): Observable<User> {
-    return this.http.get<User>(apiUrl + `/user/${id}`).pipe(tap(console.log));
+    return this.http.get<User>(apiUrl + `/user/${id}`);
     // return this.http.put<User>(`${apiUrl}/user/${id}`)
     //   .pipe((tap((data: any) => {
     //     console.log(data);
@@ -31,18 +31,15 @@ export class UserService {
   }
   // get(id: string): Observable<any> {
   //   return this.http.get(apiUrl + `/user/${id}`);
-  // }
+  //
 
   // update(user: User): Observable<User> {
   //   return this.http.put<User>(apiUrl + `/user/${user.id}`, user);
 
   // }
 
-  // ping() {
-  //   this.http.get("http://example.com/api/things").subscribe(
-  //     (data) => console.log(data),
-  //     (err) => console.log(err)
-  //   );
-  // }
+  delete(id: string): Observable<boolean> {
+    return this.http.delete<boolean>(apiUrl + `/user/${id}`);
+  }
 
 }
