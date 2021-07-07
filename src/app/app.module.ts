@@ -21,6 +21,7 @@ import { RolePipe } from './share/role.pipe';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { ModalModule } from './share/modal/modal.module';
 
 registerLocaleData(localePt);
 
@@ -42,6 +43,7 @@ registerLocaleData(localePt);
   imports: [
     BrowserModule,
     FormsModule,
+    ModalModule,
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,

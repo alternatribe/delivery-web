@@ -4,9 +4,8 @@ import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 import { FormGroup, FormBuilder, FormControl, Validators, AbstractControl } from '@angular/forms';
 import PasswordValidator from '../../share/password.validator';
-import { Router } from '@angular/router';
-import { Location } from '@angular/common';
-import { ModalService } from '../../services/modal.service';
+import { ModalService } from '../../share/modal/modal.service';
+
 
 @Component({
   selector: 'app-profile',
@@ -64,7 +63,7 @@ export class ProfileComponent implements OnInit {
     this.userService.update(this.currentUser.id, this.f.fullname.value, this.f.email.value, this.f.password.value, this.f.newPassword.value).subscribe(
       () => {
         this.isLoading = false;
-        this.modalService.open('Usuário atualizado com sucesso!!!');
+        this.modalService.open('confirm-modal');
       },
       err => {
         if (err.error?.message) {
@@ -89,7 +88,11 @@ export class ProfileComponent implements OnInit {
     this.form.reset();
   }
 
-  close(id: string) {
+  openModal(id: string) {
+    this.modalService.open(id);
+  }
+
+  closeModal(id: string) {
     this.modalService.close(id);
   }
 }
