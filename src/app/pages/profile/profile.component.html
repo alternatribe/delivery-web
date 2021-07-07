@@ -1,12 +1,139 @@
-<div class="container" *ngIf="currentUser; else loggedOut">
-  <header class="jumbotron">
-    <h3>
-      <strong>{{ currentUser.name }}</strong> Profile
-    </h3>
-  </header>
-  <p><strong>Token:</strong> {{ token }}</p>
-  <p><strong>Email:</strong> {{ currentUser.email }}</p>
-  <p><strong>Role:</strong> {{ currentUser.role | role }}</p>
+<ng-template #loggedOut> Por favor efetue login!!! </ng-template>
+<div class="card card-container" *ngIf="isLogged; else loggedOut">
+  <div class="text-center">
+    <i class="bi bi-person-circle display-1 text-primary"></i>
+    <h1 class="h3 mb-3 fw-normal">Alterar Usuário</h1>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group mb-3">
+      <label>Nome</label>
+      <input
+        type="text"
+        formControlName="fullname"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.fullname.errors }"
+      />
+      <div *ngIf="submitted && f.fullname.errors" class="invalid-feedback">
+        <div *ngIf="f.fullname.errors.required">
+          É necessário informar o nome!!!
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Email</label>
+      <input
+        type="text"
+        formControlName="email"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+      />
+      <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+        <div *ngIf="f.email.errors?.required">
+          É necessário informar um email!!!
+        </div>
+        <div *ngIf="f.email.errors?.email">
+          O formato do email é inválido!!!
+        </div>
+        <div *ngIf="f.email.errors?.maxlength">
+          A senha deve ter no máximo
+          {{ f.email.errors?.maxlength?.requiredLength }} caracteres!!!
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Senha Atual</label>
+      <input
+        type="password"
+        formControlName="password"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+      />
+      <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+        <div *ngIf="f.password.errors?.required">
+          É necessário informar uma senha!!!
+        </div>
+        <div *ngIf="f.password.errors?.minlength">
+          A senha deve ter no mínimo
+          {{ f.password.errors?.minlength?.requiredLength }} caracteres!!!
+        </div>
+        <div *ngIf="f.password.errors?.maxlength">
+          A senha deve ter no máximo
+          {{ f.password.errors?.maxlength?.requiredLength }} caracteres!!!
+        </div>
+      </div>
+    </div>
+    <div class="card-important mb-3">
+      <div class="form-group mb-3">
+        <label>Nova Senha</label>
+        <input
+          type="password"
+          formControlName="newPassword"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.newPassword.errors }"
+        />
+        <div *ngIf="submitted && f.newPassword.errors" class="invalid-feedback">
+          <div *ngIf="f.newPassword.errors?.required">
+            É necessário informar uma senha!!!
+          </div>
+          <div *ngIf="f.newPassword.errors?.minlength">
+            A senha deve ter no mínimo
+            {{ f.newPassword.errors?.minlength?.requiredLength }} caracteres!!!
+          </div>
+          <div *ngIf="f.newPassword.errors?.maxlength">
+            A senha deve ter no máximo
+            {{ f.newPassword.errors?.maxlength?.requiredLength }} caracteres!!!
+          </div>
+          <div *ngIf="f.newPassword.errors.matching">
+            A senha Atual e a Nova Senha não podem ser iguais!!!
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label>Confirmar Nova Senha</label>
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
+        />
+        <div
+          *ngIf="submitted && f.confirmPassword.errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="f.confirmPassword.errors.required">
+            É necessário confirmar a senha!!!
+          </div>
+          <div *ngIf="f.confirmPassword.errors.matching">
+            Senhas não conferem!!!
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-group text-center">
+      <button type="submit" class="btn btn-primary me-2">
+        <span
+          *ngIf="isLoading"
+          class="spinner-border spinner-border-sm mr-1"
+        ></span
+        >Atualizar
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="onReset()">
+        Cancelar
+      </button>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger mt-3 mb-0 p-1">
+        {{ error }}
+    </div>
+  </form>
 </div>
 
-<ng-template #loggedOut> Please login. </ng-template>
+
+
+
+

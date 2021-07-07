@@ -1,34 +1,73 @@
-<div class="text-center">
-  <div class="card card-container">
-  <i class="bi bi-person-circle display-1 text-primary"></i>
-  <h1 class="h3 mb-3 fw-normal">Login</h1>
+<div class="card card-container">
+  <div class="text-center">
+    <i class="bi bi-person-circle display-1 text-primary"></i>
+    <h1 class="h3 mb-3 fw-normal">Login</h1>
+  </div>
   <form [formGroup]="form" (ngSubmit)="login()">
     <div class="form-group mb-3">
       <label for="email">Email</label>
-      <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': isSubmitted && f.email.errors }" placeholder="email@example.com" (keydown)="clearErro()" />
+      <input
+        type="text"
+        formControlName="email"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': isSubmitted && f.email.errors }"
+        placeholder="email@example.com"
+        (keydown)="clearErro()"
+      />
       <div *ngIf="isSubmitted && f.email.errors" class="invalid-feedback">
-        <div *ngIf="f.email.errors?.required">É necessário informar um email!!!</div>
-        <div *ngIf="f.email.errors?.email">O formato do email é inválido!!!</div>
-        <div *ngIf="f.email.errors?.maxlength">A senha deve ter no máximo {{f.email.errors?.maxlength?.requiredLength}} caracteres!!!</div>
+        <div *ngIf="f.email.errors?.required">
+          É necessário informar um email!!!
+        </div>
+        <div *ngIf="f.email.errors?.email">
+          O formato do email é inválido!!!
+        </div>
+        <div *ngIf="f.email.errors?.maxlength">
+          A senha deve ter no máximo
+          {{ f.email.errors?.maxlength?.requiredLength }} caracteres!!!
+        </div>
       </div>
     </div>
     <div class="form-group mb-3">
       <label for="password">Senha</label>
-      <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': isSubmitted && f.password.errors }" placeholder="Senha" (keyup.enter)="login()" (keydown)="clearErro()" />
+      <input
+        type="password"
+        formControlName="password"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': isSubmitted && f.password.errors }"
+        placeholder="Senha"
+        (keyup.enter)="login()"
+        (keydown)="clearErro()"
+      />
       <div *ngIf="isSubmitted && f.password.errors" class="invalid-feedback">
-        <div *ngIf="f.password.errors?.required">É necessário informar uma senha!!!</div>
-        <div *ngIf="f.password.errors?.minlength">A senha deve ter no mínimo {{f.password.errors?.minlength?.requiredLength}} caracteres!!!</div>
-        <div *ngIf="f.password.errors?.maxlength">A senha deve ter no máximo {{f.password.errors?.maxlength?.requiredLength}} caracteres!!!</div>
+        <div *ngIf="f.password.errors?.required">
+          É necessário informar uma senha!!!
+        </div>
+        <div *ngIf="f.password.errors?.minlength">
+          A senha deve ter no mínimo
+          {{ f.password.errors?.minlength?.requiredLength }} caracteres!!!
+        </div>
+        <div *ngIf="f.password.errors?.maxlength">
+          A senha deve ter no máximo
+          {{ f.password.errors?.maxlength?.requiredLength }} caracteres!!!
+        </div>
       </div>
     </div>
-    <button [disabled]="isLoading" class="btn btn-primary">
-      <span *ngIf="isLoading" class="spinner-border spinner-border-sm mr-1"></span>
-      Login
-    </button>
+    <div class="text-center">
+      <button [disabled]="isLoading" class="btn btn-primary">
+        <span
+          *ngIf="isLoading"
+          class="spinner-border spinner-border-sm mr-1"
+        ></span>
+        Login
+      </button>
+    </div>
     <div *ngIf="error" class="alert alert-danger mt-3 mb-0 p-1">
-      <div *ngIf="error === 'Bad credentials'">Email ou Senha inválido(s)!!!</div>
-      <div *ngIf="error !== 'Bad credentials'">Não foi possível acessar. Tente novamente!!!</div>
+      <div *ngIf="error === 'Bad credentials'">
+        Email ou Senha inválido(s)!!!
+      </div>
+      <div *ngIf="error !== 'Bad credentials'">
+        Não foi possível acessar. Tente novamente!!!
+      </div>
     </div>
   </form>
-</div>
 </div>

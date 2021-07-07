@@ -1,1 +1,105 @@
-<p>register works!</p>
+<div class="card card-container">
+  <div class="text-center">
+    <i class="bi bi-person-circle display-1 text-primary"></i>
+    <h1 class="h3 mb-3 fw-normal">Cadastrar Usuário</h1>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group mb-3">
+      <label>Nome</label>
+      <input
+        type="text"
+        formControlName="fullname"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.fullname.errors }"
+      />
+      <div *ngIf="submitted && f.fullname.errors" class="invalid-feedback">
+        <div *ngIf="f.fullname.errors.required">
+          É necessário informar o nome!!!
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Email</label>
+      <input
+        type="text"
+        formControlName="email"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+      />
+      <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+        <div *ngIf="f.email.errors?.required">
+          É necessário informar um email!!!
+        </div>
+        <div *ngIf="f.email.errors?.email">
+          O formato do email é inválido!!!
+        </div>
+        <div *ngIf="f.email.errors?.maxlength">
+          A senha deve ter no máximo
+          {{ f.email.errors?.maxlength?.requiredLength }} caracteres!!!
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Senha</label>
+      <input
+        type="password"
+        formControlName="password"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+      />
+      <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+        <div *ngIf="f.password.errors?.required">
+          É necessário informar uma senha!!!
+        </div>
+        <div *ngIf="f.password.errors?.minlength">
+          A senha deve ter no mínimo
+          {{ f.password.errors?.minlength?.requiredLength }} caracteres!!!
+        </div>
+        <div *ngIf="f.password.errors?.maxlength">
+          A senha deve ter no máximo
+          {{ f.password.errors?.maxlength?.requiredLength }} caracteres!!!
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Confirmar Senha</label>
+      <input
+        type="password"
+        formControlName="confirmPassword"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
+      />
+      <div
+        *ngIf="submitted && f.confirmPassword.errors"
+        class="invalid-feedback"
+      >
+        <div *ngIf="f.confirmPassword.errors.required">
+          É necessário confirmar a senha!!!
+        </div>
+        <div *ngIf="f.confirmPassword.errors.matching">
+          Senhas não conferem!!!
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group text-center">
+      <button type="submit" class="btn btn-primary me-2">
+        <span
+          *ngIf="isLoading"
+          class="spinner-border spinner-border-sm mr-1"
+        ></span
+        >Cadastrar
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="onReset()">
+        Cancelar
+      </button>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger mt-3 mb-0 p-1">
+        {{ error }}
+    </div>
+  </form>
+</div>

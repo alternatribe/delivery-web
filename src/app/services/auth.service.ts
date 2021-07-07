@@ -11,35 +11,38 @@ const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
+const apiUrl = environment.authEndpoint;
+
+const helper = new JwtHelperService();
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  apiUrl = environment.authEndpoint;
 
   private _authenticate = new BehaviorSubject<boolean>(false);
   isAuthenticate$ = this._authenticate.asObservable();
 
   private user: User = new User();
 
-  constructor(private http: HttpClient, private storageService: StorageService, private jwtHelper: JwtHelperService) { }
+  constructor(private http: HttpClient, private storageService: StorageService) { }
 
   isLogged() {
     const token = this.storageService.getToken();
-    if (token && !this.jwtHelper.isTokenExpired(token)) {
+    if (token && !helper.isTokenExpired(token)) {
       return true;
     }
     return false;
   }
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/signin`, {
+    return this.http.post(`${apiUrl}/auth/signin`, {
       email,
       password
     }, httpOptions)
       .pipe((tap((data: any) => {
-        this.user = this.jwtHelper.decodeToken(data.token);
+        this.user = helper.decodeToken(data.token);
         this.storageService.saveToken(data.token);
         this._authenticate.next(true);
       })));
@@ -50,18 +53,23 @@ export class AuthService {
     this._authenticate.next(false);
   }
 
-  register(username: string, email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/signup`, {
-      username,
+  register(name: string, email: string, password: string): Observable<any> {
+    return this.http.post(`${apiUrl}/auth/signup`, {
+      name,
       email,
       password
-    }, httpOptions);
+    }, httpOptions)
+      .pipe((tap((data: any) => {
+        this.user = helper.decodeToken(data.token);
+        this.storageService.saveToken(data.token);
+        this._authenticate.next(true);
+      })));
   }
 
   getUser() {
     const token = this.storageService.getToken();
     if (token) {
-      return this.jwtHelper.decodeToken(token);
+      return helper.decodeToken(token);
     }
     return null;
   }

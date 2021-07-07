@@ -20,7 +20,14 @@ export class StorageService {
   }
 
   public getToken(): string | null {
-    return window.localStorage.getItem(TOKEN_KEY);
+    const token = window.localStorage.getItem(TOKEN_KEY);
+    if (token !== null) {
+      const tokenArray = token.split('.');
+      if (tokenArray.length !== 3) {
+        return null;
+      }
+    }
+    return token;
   }
 
 }
