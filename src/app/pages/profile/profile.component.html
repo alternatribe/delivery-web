@@ -133,11 +133,21 @@
   </form>
 </div>
 
-<jw-modal  id="confirm-modal">
-    <h1>A Tall Custom Modal!</h1>
-    <button (click)="closeModal('confirm-modal');">Close</button>
+<jw-modal id="confirm-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Parabéns</h5>
+    </div>
+    <div class="modal-body">
+      <p>Usuário atualizado com sucesso!!!</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal('confirm-modal')">
+        Fechar
+      </button>
+    </div>
+  </div>
 </jw-modal>
-
 
 
 
