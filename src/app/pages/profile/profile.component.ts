@@ -16,8 +16,12 @@ import { Router } from '@angular/router';
 export class ProfileComponent implements OnInit {
 
   form: FormGroup;
-  isLoading: boolean = false;
-  submitted: boolean = false;
+  formPassword: FormGroup;
+  isLoadingProfile: boolean = false;
+  isLoadingPassword: boolean = false;
+  isLoadingRemove: boolean = false;
+  profileSubmitted: boolean = false;
+  passwordsubmitted: boolean = false;
   isLogged: boolean = false;
   currentUser: User = new User();
   error = "";
@@ -26,10 +30,15 @@ export class ProfileComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private userService: UserService, private modalService: ModalService) {
     this.form = new FormGroup({
       fullname: new FormControl('', [Validators.required, Validators.maxLength(128)]),
-      email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(128)]),
-      password: new FormControl('', [Validators.minLength(6), Validators.maxLength(128)]),
-      newPassword: new FormControl('', [Validators.minLength(6), Validators.maxLength(128)]),
-      confirmPassword: new FormControl('')
+      email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(128)])
+    },
+      {
+        validators: [PasswordValidator.equals('newPassword', 'confirmPassword'), PasswordValidator.notEquals('password', 'newPassword')]
+      });
+    this.formPassword = new FormGroup({
+      password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(128)]),
+      newPassword: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(128)]),
+      confirmPassword: new FormControl('', Validators.required)
     },
       {
         validators: [PasswordValidator.equals('newPassword', 'confirmPassword'), PasswordValidator.notEquals('password', 'newPassword')]
@@ -52,55 +61,99 @@ export class ProfileComponent implements OnInit {
     return this.form.controls;
   }
 
-  onSubmit(): void {
-    this.submitted = true;
+  get fp(): { [key: string]: AbstractControl } {
+    return this.formPassword.controls;
+  }
 
+  onUpdate(): void {
+    this.profileSubmitted = true;
+    // this.form.
     if (this.form.invalid) {
       return;
     }
 
-    this.isLoading = true;
-    console.log(JSON.stringify(this.form.value, null, 2));
-    this.userService.update(this.currentUser.id, this.f.fullname.value, this.f.email.value, this.f.password.value, this.f.newPassword.value).subscribe(
-      () => {
-        this.isLoading = false;
-        this.modalService.open('confirm-modal');
-      },
-      err => {
-        if (err.error?.message) {
-          this.error = err.error.message;
-        } else {
-          if (err.error) {
-            this.error = err.error;
-          } else {
-            if (err.message) {
-              this.error = err.message;
-            } else {
-              this.error = "Erro desconhecido";
-            }
-          }
-        }
-        this.isLoading = false;
-      })
+    this.isLoadingProfile = true;
+    console.log(JSON.stringify(this.formPassword.value));
+    console.log(JSON.stringify(this.currentUser));
+    // this.userService.update(this.currentUser.id, this.f.fullname.value, this.f.email.value, this.f.password.value, this.f.newPassword.value).subscribe(
+    //   () => {
+    //     this.isLoadingProfile = false;
+    //     this.modalService.open('confirm-modal');
+    //   },
+    //   err => {
+    //     if (err.error) {
+    //       if (err.error.message) {
+    //         this.error = err.error.message;
+    //       } else {
+    //         this.error = err.message;
+    //       }
+    //     } else {
+    //       this.error = "Erro Desconhecido";
+    //     }
+    //     this.isLoadingProfile = false;
+    //   })
+  }
+
+  onUpdatePassword(): void {
+    this.passwordsubmitted = true;
+    if (this.formPassword.invalid) {
+      return;
+    }
+    this.isLoadingPassword = true;
+    console.log(JSON.stringify(this.formPassword.value));
+    console.log(JSON.stringify(this.currentUser));
+
+
+    // this.userService.update(this.currentUser.id, this.fp.password.value, this.fp.newPassword.value).subscribe(
+    //   () => {
+    //     this.isLoadingPassword = false;
+    //     this.modalService.open('confirm-modal');
+    //   },
+    //   err => {
+    //     if (err.error) {
+    //       if (err.error.message) {
+    //         this.error = err.error.message;
+    //       } else {
+    //         this.error = err.message;
+    //       }
+    //     } else {
+    //       this.error = "Erro Desconhecido";
+    //     }
+    //     this.isLoadingPassword = false;
+    //   })
   }
 
   onExcluir() {
     this.userService.delete(this.currentUser.id).subscribe(
       () => {
         this.authService.logout();
-        this.router.navigateByUrl("home");
-        this.isLoading = false;
+        this.modalService.open('remove-modal');
+        this.isLoadingRemove = false;
       },
-      () => {
-
-        this.isLoading = false;
+      (err) => {
+        if (err.error) {
+          if (err.error.message) {
+            this.error = err.error.message;
+          } else {
+            this.error = err.message;
+          }
+        } else {
+          this.error = "Erro Desconhecido";
+        }
+        this.isLoadingRemove = false;
       }
     )
   }
 
-  onReset(): void {
-    this.submitted = false;
+  onResetProfile(): void {
+    this.profileSubmitted = false;
     this.form.reset();
+    this.form.patchValue({ fullname: this.currentUser.name, email: this.currentUser.email });
+  }
+
+  onResetPassword(): void {
+    this.passwordsubmitted = false;
+    this.formPassword.reset();
   }
 
   openModal(id: string) {
@@ -108,7 +161,15 @@ export class ProfileComponent implements OnInit {
   }
 
   closeModal(id: string) {
-    this.modalService.close(id);
+    this.modalService.close(id).subscribe();
+  }
+
+  closeModalRemove(id: string) {
+    this.modalService.close(id).subscribe(
+      () => {
+        this.router.navigateByUrl("home");
+      }
+    );
   }
 }
 

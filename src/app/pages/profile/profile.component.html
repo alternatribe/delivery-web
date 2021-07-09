@@ -1,34 +1,27 @@
 <ng-template #loggedOut> Por favor efetue login!!! </ng-template>
+
 <div class="card card-container" *ngIf="isLogged; else loggedOut">
   <div class="text-center">
     <i class="bi bi-person-circle display-1 text-primary"></i>
     <h1 class="h3 mb-3 fw-normal">Alterar Usuário</h1>
   </div>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="form-group mb-3">
-      <label>Nome</label>
-      <input
-        type="text"
-        formControlName="fullname"
-        class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.fullname.errors }"
-      />
-      <div *ngIf="submitted && f.fullname.errors" class="invalid-feedback">
+
+  <form class="row g-3" [formGroup]="form" (ngSubmit)="onUpdate()">
+    <div class="col-md-12">
+      <label class="form-label">Nome</label>
+      <input type="email" class="form-control" formControlName="fullname"
+        [ngClass]="{ 'is-invalid': profileSubmitted && f.fullname.errors }" />
+      <div *ngIf="profileSubmitted && f.fullname.errors" class="invalid-feedback">
         <div *ngIf="f.fullname.errors.required">
           É necessário informar o nome!!!
         </div>
       </div>
     </div>
-
-    <div class="form-group mb-3">
-      <label>Email</label>
-      <input
-        type="text"
-        formControlName="email"
-        class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
-      />
-      <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+    <div class="col-md-6">
+      <label class="form-label">Email</label>
+      <input type="email" class="form-control" formControlName="email"
+        [ngClass]="{ 'is-invalid': profileSubmitted && f.fullname.errors }" />
+      <div *ngIf="profileSubmitted && f.email.errors" class="invalid-feedback">
         <div *ngIf="f.email.errors?.required">
           É necessário informar um email!!!
         </div>
@@ -41,106 +34,99 @@
         </div>
       </div>
     </div>
-
-    <div class="form-group mb-3">
-      <label>Senha Atual</label>
-      <input
-        type="password"
-        formControlName="password"
-        class="form-control"
-        [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
-      />
-      <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-        <div *ngIf="f.password.errors?.required">
-          É necessário informar uma senha!!!
-        </div>
-        <div *ngIf="f.password.errors?.minlength">
-          A senha deve ter no mínimo
-          {{ f.password.errors?.minlength?.requiredLength }} caracteres!!!
-        </div>
-        <div *ngIf="f.password.errors?.maxlength">
-          A senha deve ter no máximo
-          {{ f.password.errors?.maxlength?.requiredLength }} caracteres!!!
-        </div>
-      </div>
-    </div>
-    <div class="card-important mb-3">
-      <div class="form-group mb-3">
-        <label>Nova Senha</label>
-        <input
-          type="password"
-          formControlName="newPassword"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.newPassword.errors }"
-        />
-        <div *ngIf="submitted && f.newPassword.errors" class="invalid-feedback">
-          <div *ngIf="f.newPassword.errors?.required">
-            É necessário informar uma senha!!!
-          </div>
-          <div *ngIf="f.newPassword.errors?.minlength">
-            A senha deve ter no mínimo
-            {{ f.newPassword.errors?.minlength?.requiredLength }} caracteres!!!
-          </div>
-          <div *ngIf="f.newPassword.errors?.maxlength">
-            A senha deve ter no máximo
-            {{ f.newPassword.errors?.maxlength?.requiredLength }} caracteres!!!
-          </div>
-          <div *ngIf="f.newPassword.errors.matching">
-            A senha Atual e a Nova Senha não podem ser iguais!!!
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group mb-3">
-        <label>Confirmar Nova Senha</label>
-        <input
-          type="password"
-          formControlName="confirmPassword"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
-        />
-        <div
-          *ngIf="submitted && f.confirmPassword.errors"
-          class="invalid-feedback"
-        >
-          <div *ngIf="f.confirmPassword.errors.required">
-            É necessário confirmar a senha!!!
-          </div>
-          <div *ngIf="f.confirmPassword.errors.matching">
-            Senhas não conferem!!!
-          </div>
-        </div>
-      </div>
-
-    </div>
-
     <div class="form-group text-center">
-      <button type="submit" class="btn btn-primary me-2">
-        <span
-          *ngIf="isLoading"
-          class="spinner-border spinner-border-sm mr-1"
-        ></span
-        >Atualizar
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="onReset()">
-        Cancelar
-      </button>
+  <button type="submit" class="btn btn-primary me-2">
+    <span *ngIf="isLoadingProfile" class="spinner-border spinner-border-sm mr-1"></span>Atualizar
+  </button>
+  <button type="button" class="btn btn-secondary" (click)="onResetProfile()">
+    Cancelar
+  </button>
+</div>
+  </form>
+</div>
+
+<div class="card card-container" *ngIf="isLogged; else loggedOut">
+  <form class="row g-3" [formGroup]="formPassword" (ngSubmit)="onUpdatePassword()">
+  <div class="row g-3">
+    <div class="col-md-5">
+      <label class="form-label">Senha Atual</label>
+      <input type="password" class="form-control" formControlName="password"
+        [ngClass]="{ 'is-invalid': passwordsubmitted && fp.password.errors }">
+      <div *ngIf="passwordsubmitted && fp.password.errors" class="invalid-feedback">
+        <div *ngIf="fp.password.errors?.required">
+          É necessário informar a senha atual!!!
+        </div>
+        <div *ngIf="fp.password.errors?.minlength">
+          A senha deve ter no mínimo
+          {{ fp.password.errors?.minlength?.requiredLength }} caracteres!!!
+        </div>
+        <div *ngIf="fp.password.errors?.maxlength">
+          A senha deve ter no máximo
+          {{ fp.password.errors?.maxlength?.requiredLength }} caracteres!!!
+        </div>
+      </div>
+    </div>
+    <div class="row"></div>
+    <div class="col-md-6">
+      <label>Nova Senha</label>
+      <input type="password" formControlName="newPassword" class="form-control"
+        [ngClass]="{ 'is-invalid': passwordsubmitted && fp.newPassword.errors }" />
+      <div *ngIf="passwordsubmitted && fp.newPassword.errors" class="invalid-feedback">
+        <div *ngIf="fp.newPassword.errors?.required">
+          É necessário informar uma nova senha!!!
+        </div>
+        <div *ngIf="fp.newPassword.errors?.minlength">
+          A senha deve ter no mínimo
+          {{ fp.newPassword.errors?.minlength?.requiredLength }} caracteres!!!
+        </div>
+        <div *ngIf="fp.newPassword.errors?.maxlength">
+          A senha deve ter no máximo
+          {{ fp.newPassword.errors?.maxlength?.requiredLength }} caracteres!!!
+        </div>
+        <div *ngIf="fp.newPassword.errors.matching">
+          A Senha Atual e a Nova Senha não podem ser iguais!!!
+        </div>
+      </div>
     </div>
 
-    <div *ngIf="error" class="alert alert-danger mt-3 mb-0 p-1">
-        {{ error }}
+    <div class="col-md-6">
+      <label>Confirmar Nova Senha</label>
+      <input type="password" formControlName="confirmPassword" class="form-control"
+        [ngClass]="{ 'is-invalid': passwordsubmitted && fp.confirmPassword.errors }" />
+      <div *ngIf="passwordsubmitted && fp.confirmPassword.errors" class="invalid-feedback">
+        <div *ngIf="fp.confirmPassword.errors.required">
+          É necessário confirmar a senha!!!
+        </div>
+        <div *ngIf="fp.confirmPassword.errors.matching">
+          Senhas não conferem!!!
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="form-group text-center">
+  <button type="submit" class="btn btn-primary me-2">
+    <span *ngIf="isLoadingPassword" class="spinner-border spinner-border-sm mr-1"></span>Atualizar
+  </button>
+  <button type="button" class="btn btn-secondary" (click)="onResetPassword()">
+    Cancelar
+  </button>
+</div>
   </form>
+</div>
+
+<div *ngIf="error" class="alert alert-danger mt-3 mb-0 p-1">
+  {{ error }}
 </div>
 
 <div class="card card-container">
   <div class="text-center">
     <i class="bi bi-person-dash-fill display-1 text-danger"></i>
     <h1 class="h3 fw-normal text-danger">
-      Deseja realmente excluir o cadastro?
+      Deseja excluir o seu cadastro?
     </h1>
+    <p>Sua conta será desativada, mas poderá ser reativada caso deseje.</p>
     <button type="button" class="btn btn-secondary" (click)="onExcluir()">
-      Excluir
+      <span *ngIf="isLoadingRemove" class="spinner-border spinner-border-sm mr-1"></span>Excluir
     </button>
   </div>
 </div>
@@ -161,5 +147,16 @@
   </div>
 </jw-modal>
 
-
-
+<jw-modal id="remove-modal">
+  <div class="modal-content">
+    <div class="modal-body">
+      <p><strong>Cadastro removido com sucesso!!!</strong></p>
+      <p>Por motivos de segurança, sua conta encontra-se desativada. Caso queira recuperá-la, por favor entre em contato conosco.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModalRemove('remove-modal')">
+        Fechar
+      </button>
+    </div>
+  </div>
+</jw-modal>

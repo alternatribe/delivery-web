@@ -6,14 +6,13 @@ jw-modal {
         /* modal container fixed across whole screen */
         position: fixed;
         top: 0;
-        right: calc(50% - 7rem);
-
+        max-width: 50%;
+        transform: translateX(50%);
         /* z-index must be higher than .jw-modal-background */
         z-index: 1000;
 
         /* enables scrolling for tall modals */
         overflow: auto;
-
     }
 
     .jw-modal-background {

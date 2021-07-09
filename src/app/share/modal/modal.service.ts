@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -6,6 +7,7 @@ import { Injectable } from '@angular/core';
 export class ModalService {
 
   private modals: any[] = [];
+  private _isOpen = new BehaviorSubject<boolean>(false);
 
   add(modal: any) {
     this.modals.push(modal);
@@ -20,8 +22,10 @@ export class ModalService {
     modal.open();
   }
 
-  close(id: string) {
+  close(id: string) : Observable<boolean> {
     const modal = this.modals.find(x => x.id === id);
     modal.close();
+    this._isOpen.next(true);
+    return this._isOpen;
   }
 }

@@ -18,8 +18,8 @@ export class UserService {
     return this.http.get<User>(apiUrl + `/user/${id}`);
   }
 
-  update(id: string, name: string, email: string, password: string, newPassword: string): Observable<User> {
-    return this.http.get<User>(apiUrl + `/user/${id}`);
+  update(user: User): Observable<User> {
+    return this.http.get<User>(apiUrl + `/user/${user.id}`);
     // return this.http.put<User>(`${apiUrl}/user/${id}`)
     //   .pipe((tap((data: any) => {
     //     console.log(data);

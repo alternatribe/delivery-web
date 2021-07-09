@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit{
   form: FormGroup;
   isLoading = false;
   isSubmitted = false;
-  error = "";
+  error: string = "";
 
 
   constructor(private authService: AuthService, private router: Router) {
@@ -54,14 +54,18 @@ export class LoginComponent implements OnInit{
         this.router.navigateByUrl("home");
       },
       err => {
-        if (err.error.message) {
-          this.error = err.error.message;
-        } else {
-          if (err.message) {
-            this.error = err.message;
+        if (err.error) {
+          if (err.error.message === 'Bad credentials') {
+            this.error = "Usuário e/ou Senha Inválido(s)!!!";
+          } else if (err.error.message === 'Account disabled') {
+            this.error = "Conta desativada!!! Por favor entre em contato por email...";
+          } else if (err.error.message) {
+            this.error = err.error.message;
           } else {
-            this.error = "Erro desconhecido";
+            this.error = err.message;
           }
+        } else {
+          this.error = "Erro Desconhecido";
         }
         this.isLoading = false;
       })

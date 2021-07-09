@@ -3,7 +3,7 @@ export const environment = {
   authEndpoint: 'http://localhost:8080',
   mainEndpoint: 'http://localhost:8080',
   startPage: 'products',
-  nomeEmpresa: 'Pizzaria Italiana',
-  enderecoEmpresa: 'Rua Santa Sicilia, 1977',
+  nomeEmpresa: 'IFPR Pizzeria',
+  enderecoEmpresa: 'Via Colina Spaccanapoli, 1977',
   telefoneEmpresa: '(41) 3333-3333'
 };
