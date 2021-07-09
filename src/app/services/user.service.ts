@@ -18,25 +18,9 @@ export class UserService {
     return this.http.get<User>(apiUrl + `/user/${id}`);
   }
 
-  update(user: User): Observable<User> {
-    return this.http.get<User>(apiUrl + `/user/${user.id}`);
-    // return this.http.put<User>(`${apiUrl}/user/${id}`)
-    //   .pipe((tap((data: any) => {
-    //     console.log(data);
-
-    //     this.user = helper.decodeToken(data.token);
-    //     this.storageService.saveToken(data.token);
-    //     this._authenticate.next(true);
-    //   })));
+  update(user: User) {
+    return this.http.put(apiUrl + `/user/`, user);
   }
-  // get(id: string): Observable<any> {
-  //   return this.http.get(apiUrl + `/user/${id}`);
-  //
-
-  // update(user: User): Observable<User> {
-  //   return this.http.put<User>(apiUrl + `/user/${user.id}`, user);
-
-  // }
 
   delete(id: string): Observable<boolean> {
     return this.http.delete<boolean>(apiUrl + `/user/${id}`);

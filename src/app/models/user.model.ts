@@ -5,5 +5,7 @@ export class User {
   name!: string;
   email!: string;
   role!: RoleEnum;
-  address!: Address[];
+  address!: Address;
+  password!: string;
+  newPassword!: string;
 }

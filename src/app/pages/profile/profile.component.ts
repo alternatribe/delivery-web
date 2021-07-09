@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 })
 export class ProfileComponent implements OnInit {
 
-  form: FormGroup;
+  formProfile: FormGroup;
   formPassword: FormGroup;
   isLoadingProfile: boolean = false;
   isLoadingPassword: boolean = false;
@@ -24,17 +24,17 @@ export class ProfileComponent implements OnInit {
   passwordsubmitted: boolean = false;
   isLogged: boolean = false;
   currentUser: User = new User();
-  error = "";
+  newUser: User = new User();
+  errorProfile = "";
+  errorPassword = "";
+  errorRemove = "";
   bodyText: string = "";
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private userService: UserService, private modalService: ModalService) {
-    this.form = new FormGroup({
-      fullname: new FormControl('', [Validators.required, Validators.maxLength(128)]),
-      email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(128)])
-    },
-      {
-        validators: [PasswordValidator.equals('newPassword', 'confirmPassword'), PasswordValidator.notEquals('password', 'newPassword')]
-      });
+    this.formProfile = new FormGroup({
+      name: new FormControl({ value: '', disabled: true }),
+      email: new FormControl({ value: '', disabled: true })
+    });
     this.formPassword = new FormGroup({
       password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(128)]),
       newPassword: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(128)]),
@@ -52,46 +52,45 @@ export class ProfileComponent implements OnInit {
         console.log(user);
 
         this.currentUser = user;
-        this.form.patchValue({ fullname: user.name, email: user.email });
+        this.formProfile.patchValue({ name: user.name, email: user.email });
       }
     )
   };
 
   get f(): { [key: string]: AbstractControl } {
-    return this.form.controls;
+    return this.formProfile.controls;
   }
 
   get fp(): { [key: string]: AbstractControl } {
     return this.formPassword.controls;
   }
 
-  onUpdate(): void {
+  onUpdateProfile(): void {
     this.profileSubmitted = true;
-    // this.form.
-    if (this.form.invalid) {
+    if (this.formProfile.invalid) {
       return;
     }
 
     this.isLoadingProfile = true;
-    console.log(JSON.stringify(this.formPassword.value));
-    console.log(JSON.stringify(this.currentUser));
-    // this.userService.update(this.currentUser.id, this.f.fullname.value, this.f.email.value, this.f.password.value, this.f.newPassword.value).subscribe(
-    //   () => {
-    //     this.isLoadingProfile = false;
-    //     this.modalService.open('confirm-modal');
-    //   },
-    //   err => {
-    //     if (err.error) {
-    //       if (err.error.message) {
-    //         this.error = err.error.message;
-    //       } else {
-    //         this.error = err.message;
-    //       }
-    //     } else {
-    //       this.error = "Erro Desconhecido";
-    //     }
-    //     this.isLoadingProfile = false;
-    //   })
+    this.newUser = Object.assign({}, this.formProfile.value);
+    this.newUser.id = this.currentUser.id;
+    this.userService.update(this.newUser).subscribe(
+      () => {
+        this.isLoadingProfile = false;
+        this.modalService.open('confirm-modal');
+      },
+      err => {
+        if (err.error) {
+          if (err.error.message) {
+            this.errorProfile = err.error.message;
+          } else {
+            this.errorProfile = err.message;
+          }
+        } else {
+          this.errorProfile = "Erro Desconhecido";
+        }
+        this.isLoadingProfile = false;
+      })
   }
 
   onUpdatePassword(): void {
@@ -100,27 +99,31 @@ export class ProfileComponent implements OnInit {
       return;
     }
     this.isLoadingPassword = true;
-    console.log(JSON.stringify(this.formPassword.value));
-    console.log(JSON.stringify(this.currentUser));
-
-
-    // this.userService.update(this.currentUser.id, this.fp.password.value, this.fp.newPassword.value).subscribe(
-    //   () => {
-    //     this.isLoadingPassword = false;
-    //     this.modalService.open('confirm-modal');
-    //   },
-    //   err => {
-    //     if (err.error) {
-    //       if (err.error.message) {
-    //         this.error = err.error.message;
-    //       } else {
-    //         this.error = err.message;
-    //       }
-    //     } else {
-    //       this.error = "Erro Desconhecido";
-    //     }
-    //     this.isLoadingPassword = false;
-    //   })
+    this.newUser.id = this.currentUser.id;
+    console.log(this.fp);
+    this.newUser.password = this.fp.password.value;
+    this.newUser.newPassword = this.fp.newPassword.value;
+    this.userService.update(this.newUser).subscribe(
+      () => {
+        this.isLoadingPassword = false;
+        this.modalService.open('confirm-modal');
+        this.onResetPassword();
+      },
+      err => {
+        if (err.error) {
+          if (err.error.message === 'Bad credentials') {
+            this.errorPassword = "Usuário e/ou Senha Inválido(s)!!!";
+          } else
+            if (err.error.message) {
+              this.errorPassword = err.error.message;
+            } else {
+              this.errorPassword = err.message;
+            }
+        } else {
+          this.errorPassword = "Erro Desconhecido";
+        }
+        this.isLoadingPassword = false;
+      })
   }
 
   onExcluir() {
@@ -133,12 +136,12 @@ export class ProfileComponent implements OnInit {
       (err) => {
         if (err.error) {
           if (err.error.message) {
-            this.error = err.error.message;
+            this.errorRemove = err.error.message;
           } else {
-            this.error = err.message;
+            this.errorRemove = err.message;
           }
         } else {
-          this.error = "Erro Desconhecido";
+          this.errorRemove = "Erro Desconhecido";
         }
         this.isLoadingRemove = false;
       }
@@ -147,13 +150,15 @@ export class ProfileComponent implements OnInit {
 
   onResetProfile(): void {
     this.profileSubmitted = false;
-    this.form.reset();
-    this.form.patchValue({ fullname: this.currentUser.name, email: this.currentUser.email });
+    this.formProfile.reset();
+    this.formProfile.patchValue({ name: this.currentUser.name, email: this.currentUser.email });
+    this.errorProfile = "";
   }
 
   onResetPassword(): void {
     this.passwordsubmitted = false;
     this.formPassword.reset();
+    this.errorPassword = "";
   }
 
   openModal(id: string) {
@@ -161,7 +166,11 @@ export class ProfileComponent implements OnInit {
   }
 
   closeModal(id: string) {
-    this.modalService.close(id).subscribe();
+    this.modalService.close(id).subscribe(
+      () => {
+        this.router.navigateByUrl("profile");
+      }
+    );
   }
 
   closeModalRemove(id: string) {
