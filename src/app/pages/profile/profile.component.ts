@@ -6,6 +6,9 @@ import { FormGroup, FormBuilder, FormControl, Validators, AbstractControl } from
 import PasswordValidator from '../../share/password.validator';
 import { ModalService } from '../../share/modal/modal.service';
 import { Router } from '@angular/router';
+import { Estado } from '../../models/estado.model';
+import { Cidade } from '../../models/cidade.model';
+import { UtilService } from '../../share/services/util.service';
 
 
 @Component({
@@ -30,10 +33,22 @@ export class ProfileComponent implements OnInit {
   errorRemove = "";
   bodyText: string = "";
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private userService: UserService, private modalService: ModalService) {
+  listaEstados: Estado[] = [];
+  listaCidades: Cidade[] = [];
+
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private userService: UserService, private modalService: ModalService, private utilService: UtilService) {
     this.formProfile = new FormGroup({
       name: new FormControl({ value: '', disabled: true }),
-      email: new FormControl({ value: '', disabled: true })
+      email: new FormControl({ value: '', disabled: true }),
+      address: new FormGroup({
+        zip: new FormControl(null),
+        houseNumber: new FormControl(null),
+        reference: new FormControl(null),
+        street: new FormControl(null),
+        district: new FormControl({ value: null, disabled: true }),
+        city: new FormControl({ value: null, disabled: true }),
+        state: new FormControl(null),
+      })
     });
     this.formPassword = new FormGroup({
       password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(128)]),
@@ -47,14 +62,15 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLogged = this.authService.isLogged();
-    this.userService.get(this.authService.getUser().id).subscribe(
+    this.userService.details(this.authService.getUser().id).subscribe(
       (user) => {
         console.log(user);
 
         this.currentUser = user;
-        this.formProfile.patchValue({ name: user.name, email: user.email });
+        this.formProfile.patchValue(user);
       }
-    )
+    );
+    this.utilService.getEstados().subscribe(lista => this.listaEstados = lista);
   };
 
   get f(): { [key: string]: AbstractControl } {

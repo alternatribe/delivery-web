@@ -42,6 +42,85 @@
         </div>
       </div>
     </div>
+
+    <div formGroupName="address">
+      <div class="form-group">
+        <div class="col-md-3">
+          <label for="zip" class="control-label">CEP</label>
+          <input
+            type="text"
+            class="form-control"
+            id="zip"
+            formControlName="zip"
+          />
+        </div>
+
+        <div class="col-md-3">
+          <label for="houseNumber" class="control-label">Número</label>
+          <input
+            type="text"
+            class="form-control"
+            id="houseNumber"
+            formControlName="houseNumber"
+          />
+        </div>
+
+        <div class="col-md-6">
+          <label for="reference" class="control-label">Complemento</label>
+          <input
+            type="text"
+            class="form-control"
+            id="reference"
+            formControlName="reference"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-12">
+          <label for="street" class="control-label">Rua</label>
+        </div>
+        <div class="col-sm-12">
+          <input
+            type="text"
+            class="form-control"
+            id="street"
+            formControlName="street"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-md-5">
+          <label for="district" class="control-label">Bairro</label>
+          <input
+            type="text"
+            class="form-control"
+            id="district"
+            formControlName="district"
+          />
+        </div>
+
+        <div class="col-md-4">
+          <label for="city" class="control-label">Cidade</label>
+          <select class="form-control" id="city" formControlName="city">
+            <option *ngFor="let cidade of listaCidades" [value]="cidade.nome">
+              {{ cidade.nome }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="state" class="control-label">Estado</label>
+          <select class="form-control" id="state" formControlName="state">
+            <option *ngFor="let estado of listaEstados" [value]="estado.sigla">
+              {{ estado.nome }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div class="form-group text-center">
       <button
         type="button"
@@ -64,8 +143,8 @@
     </div>
   </form>
   <div *ngIf="errorProfile" class="alert alert-danger mt-3 mb-0 p-1">
-  {{ errorProfile }}
-</div>
+    {{ errorProfile }}
+  </div>
 </div>
 
 <div class="card card-container" *ngIf="isLogged; else loggedOut">
@@ -173,8 +252,8 @@
     </div>
   </form>
   <div *ngIf="errorPassword" class="alert alert-danger mt-3 mb-0 p-1">
-  {{ errorPassword }}
-</div>
+    {{ errorPassword }}
+  </div>
 </div>
 
 <div class="card card-container">
@@ -191,8 +270,8 @@
     </button>
   </div>
   <div *ngIf="errorRemove" class="alert alert-danger mt-3 mb-0 p-1">
-  {{ errorRemove }}
-</div>
+    {{ errorRemove }}
+  </div>
 </div>
 
 <jw-modal id="confirm-modal">
