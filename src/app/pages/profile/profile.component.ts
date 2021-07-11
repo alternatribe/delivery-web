@@ -9,6 +9,9 @@ import { Router } from '@angular/router';
 import { Estado } from '../../models/estado.model';
 import { Cidade } from '../../models/cidade.model';
 import { UtilService } from '../../share/services/util.service';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { Address } from '../../models/address.model';
 
 
 @Component({
@@ -45,8 +48,10 @@ export class ProfileComponent implements OnInit {
         houseNumber: new FormControl(null),
         reference: new FormControl(null),
         street: new FormControl(null),
-        district: new FormControl({ value: null, disabled: true }),
+        district: new FormControl(null),
+        // district: new FormControl({ value: null, disabled: true }),1
         city: new FormControl({ value: null, disabled: true }),
+        // city: new FormControl(null),
         state: new FormControl(null),
       })
     });
@@ -64,15 +69,32 @@ export class ProfileComponent implements OnInit {
     this.isLogged = this.authService.isLogged();
     this.userService.details(this.authService.getUser().id).subscribe(
       (user) => {
-        console.log(user);
-
         this.currentUser = user;
         this.formProfile.patchValue(user);
       }
     );
-    this.utilService.getEstados().subscribe(lista => this.listaEstados = lista);
+    this.utilService.getEstadosJson().subscribe(lista => {
+      this.listaEstados = lista;
+      this.listaEstados.sort((a, b) => a.nome.localeCompare(b.nome))
+    });
+
+    this.formProfile.get("address.state")?.valueChanges.subscribe(uf => {
+      if (uf) {
+        this.utilService.getMunicipios(uf).subscribe(lista => {
+          this.listaCidades = lista;
+          this.listaCidades.sort((a, b) => a.nome.localeCompare(b.nome));
+          this.address.controls.city.enable();
+        });
+      } else {
+        this.listaCidades = [];
+        this.address.controls.city.disable();
+      }
+    });
   };
 
+  get address(): any {
+    return this.formProfile.get('address');
+  }
   get f(): { [key: string]: AbstractControl } {
     return this.formProfile.controls;
   }
@@ -167,7 +189,7 @@ export class ProfileComponent implements OnInit {
   onResetProfile(): void {
     this.profileSubmitted = false;
     this.formProfile.reset();
-    this.formProfile.patchValue({ name: this.currentUser.name, email: this.currentUser.email });
+    this.formProfile.patchValue({ name: this.currentUser.name, email: this.currentUser.email, address: this.currentUser.address });
     this.errorProfile = "";
   }
 
@@ -195,6 +217,31 @@ export class ProfileComponent implements OnInit {
         this.router.navigateByUrl("home");
       }
     );
+  }
+
+  buscaCEP() {
+    let cep: string = (this.formProfile.controls.address.value).zip;
+    this.address.controls.zip.value;
+    if (cep != null && cep !== '') {
+      this.onResetProfile();
+      this.utilService.buscaCEP(cep)
+        .subscribe((dados) => {
+          if (dados.hasOwnProperty("erro")) {
+            this.address.reset();
+          } else {
+            let address: Address = new Address(dados);
+            this.formProfile.patchValue({
+              address: {
+                street: address.street,
+                district: address.district,
+                zip: address.zip,
+                city: address.city,
+                state: address.state
+              }
+            });
+          }
+        });
+    }
   }
 }
 
