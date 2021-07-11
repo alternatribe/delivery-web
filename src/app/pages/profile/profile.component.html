@@ -40,7 +40,10 @@
       <div class="col-md-3">
         <label class="form-label">CEP</label>
         <input type="text" class="form-control" formControlName="zip" (blur)="buscaCEP()"
-        [ngClass]="{ 'is-invalid': profileSubmitted && address.zip?.errors }" />
+        [ngClass]="{ 'is-invalid': profileSubmitted && address.controls.zip.errors }" />
+        <div *ngIf="profileSubmitted && address.controls.zip.errors" class="invalid-feedback">
+          Cep Inválido
+        </div>
       </div>
       <div class="col-md-4">
         <label class="form-label">Estado</label>

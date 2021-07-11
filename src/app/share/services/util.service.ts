@@ -25,15 +25,16 @@ export class UtilService {
   }
 
   buscaCEP(cep: string) {
-    cep = cep.replace(/\D/g, '');
-    if (cep !== '') {
-      const validacao = /^[0-9]{8}$/;
+    if (cep !== undefined && cep !== null){
+      cep = cep.replace(/\D/g, '');
+      if (cep !== '') {
+        const validacao = /^[0-9]{8}$/;
 
-      if (validacao.test(cep)) {
-        return this.http.get(apiCEP + `${cep}/json`);
+        if (validacao.test(cep)) {
+          return this.http.get(apiCEP + `${cep}/json`);
+        }
       }
     }
-
     return of({});
   }
 }

@@ -9,9 +9,9 @@ import { Router } from '@angular/router';
 import { Estado } from '../../models/estado.model';
 import { Cidade } from '../../models/cidade.model';
 import { UtilService } from '../../share/services/util.service';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
 import { Address } from '../../models/address.model';
+import { EMPTY, Observable, BehaviorSubject } from 'rxjs';
+import FormValidator from '../../share/form.validator';
 
 
 @Component({
@@ -40,21 +40,21 @@ export class ProfileComponent implements OnInit {
   listaCidades: Cidade[] = [];
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private userService: UserService, private modalService: ModalService, private utilService: UtilService) {
+
     this.formProfile = new FormGroup({
       name: new FormControl({ value: '', disabled: true }),
       email: new FormControl({ value: '', disabled: true }),
       address: new FormGroup({
-        zip: new FormControl(null),
+        zip: new FormControl(null, [FormValidator.cep]),
         houseNumber: new FormControl(null),
         reference: new FormControl(null),
         street: new FormControl(null),
         district: new FormControl(null),
-        // district: new FormControl({ value: null, disabled: true }),1
         city: new FormControl({ value: null, disabled: true }),
-        // city: new FormControl(null),
         state: new FormControl(null),
       })
     });
+
     this.formPassword = new FormGroup({
       password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(128)]),
       newPassword: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(128)]),
@@ -67,6 +67,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLogged = this.authService.isLogged();
+
     this.userService.details(this.authService.getUser().id).subscribe(
       (user) => {
         this.currentUser = user;
@@ -95,6 +96,7 @@ export class ProfileComponent implements OnInit {
   get address(): any {
     return this.formProfile.get('address');
   }
+
   get f(): { [key: string]: AbstractControl } {
     return this.formProfile.controls;
   }
@@ -220,14 +222,15 @@ export class ProfileComponent implements OnInit {
   }
 
   buscaCEP() {
+    this.profileSubmitted = true;
     let cep: string = (this.formProfile.controls.address.value).zip;
-    this.address.controls.zip.value;
     if (cep != null && cep !== '') {
-      this.onResetProfile();
       this.utilService.buscaCEP(cep)
         .subscribe((dados) => {
           if (dados.hasOwnProperty("erro")) {
             this.address.reset();
+            this.address.controls.zip.setValue(cep);
+            this.address.controls.zip.setErrors({ cepInvalido: true });
           } else {
             let address: Address = new Address(dados);
             this.formProfile.patchValue({
