@@ -3,18 +3,14 @@
 <div class="card card-container" *ngIf="isLogged; else loggedOut">
   <div class="text-center">
     <i class="bi bi-person-circle display-1 text-primary"></i>
-    <h1 class="h3 mb-3 fw-normal">Alterar Usuário</h1>
+    <h1 class="h3 fw-normal">Alterar Usuário</h1>
   </div>
 
   <form class="row g-3" [formGroup]="formProfile">
     <div class="col-md-12">
       <label class="form-label">Nome</label>
-      <input
-        type="email"
-        class="form-control"
-        formControlName="name"
-        [ngClass]="{ 'is-invalid': profileSubmitted && f.name.errors }"
-      />
+      <input type="text" class="form-control" formControlName="name"
+        [ngClass]="{ 'is-invalid': profileSubmitted && f.name.errors }" />
       <div *ngIf="profileSubmitted && f.name.errors" class="invalid-feedback">
         <div *ngIf="f.name.errors.required">
           É necessário informar o nome!!!
@@ -23,12 +19,8 @@
     </div>
     <div class="col-md-6">
       <label class="form-label">Email</label>
-      <input
-        type="email"
-        class="form-control"
-        formControlName="email"
-        [ngClass]="{ 'is-invalid': profileSubmitted && f.email.errors }"
-      />
+      <input type="email" class="form-control" formControlName="email"
+        [ngClass]="{ 'is-invalid': profileSubmitted && f.email.errors }" />
       <div *ngIf="profileSubmitted && f.email.errors" class="invalid-feedback">
         <div *ngIf="f.email.errors?.required">
           É necessário informar um email!!!
@@ -37,110 +29,67 @@
           O formato do email é inválido!!!
         </div>
         <div *ngIf="f.email.errors?.maxlength">
-          A senha deve ter no máximo
+          O email deve ter no máximo
           {{ f.email.errors?.maxlength?.requiredLength }} caracteres!!!
         </div>
       </div>
     </div>
+    <div class="row"></div>
+    <div class="row g-3 mt-0" formGroupName="address">
 
-    <div formGroupName="address">
-      <div class="form-group">
-        <div class="col-md-3">
-          <label for="zip" class="control-label">CEP</label>
-          <input
-            type="text"
-            class="form-control"
-            id="zip"
-            formControlName="zip"
-            (blur)="buscaCEP()"
-          />
-        </div>
-
-        <div class="col-md-3">
-          <label for="houseNumber" class="control-label">Número</label>
-          <input
-            type="text"
-            class="form-control"
-            id="houseNumber"
-            formControlName="houseNumber"
-          />
-        </div>
-
-        <div class="col-md-6">
-          <label for="reference" class="control-label">Complemento</label>
-          <input
-            type="text"
-            class="form-control"
-            id="reference"
-            formControlName="reference"
-          />
-        </div>
+      <div class="col-md-3">
+        <label class="form-label">CEP</label>
+        <input type="text" class="form-control" formControlName="zip" (blur)="buscaCEP()"
+        [ngClass]="{ 'is-invalid': profileSubmitted && address.zip?.errors }" />
       </div>
-
-      <div class="form-group">
-        <div class="col-sm-12">
-          <label for="street" class="control-label">Rua</label>
-        </div>
-        <div class="col-sm-12">
-          <input
-            type="text"
-            class="form-control"
-            id="street"
-            formControlName="street"
-          />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col-md-5">
-          <label for="district" class="control-label">Bairro</label>
-          <input
-            type="text"
-            class="form-control"
-            id="district"
-            formControlName="district"
-          />
-        </div>
-
-        <div class="col-md-4">
-          <label for="city" class="control-label">Cidade</label>
-          <select class="form-control" id="city" formControlName="city">
-            <option *ngFor="let cidade of listaCidades" [value]="cidade.nome">
-              {{ cidade.nome }}
-            </option>
-          </select>
-        </div>
-
-        <div class="col-md-3">
-          <label for="state" class="control-label">Estado</label>
-          <select class="form-control" id="state" formControlName="state">
-            <option *ngFor="let estado of listaEstados" [value]="estado.sigla">
-              {{ estado.nome }}
-            </option>
-          </select>
-        </div>
-      </div>
+      <div class="col-md-4">
+        <label class="form-label">Estado</label>
+        <select class="form-select" id="state" formControlName="state"
+        [ngClass]="{ 'is-invalid': profileSubmitted && address.state?.errors }">
+        <option *ngFor="let estado of listaEstados" [value]="estado.sigla">
+          {{ estado.nome }}
+        </option>
+      </select>
     </div>
-
-    <div class="form-group text-center">
-      <button
-        type="button"
-        class="btn btn-primary me-2"
-        (click)="onUpdateProfile()"
-      >
-        <span
-          *ngIf="isLoadingProfile"
-          class="spinner-border spinner-border-sm mr-1"
-        ></span
-        >Atualizar
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="onResetProfile()"
-      >
-        Cancelar
-      </button>
+    <div class="col-md-5">
+      <label class="form-label">Cidade</label>
+      <select class="form-select" id="city" formControlName="city"
+      [ngClass]="{ 'is-invalid': profileSubmitted && address.city?.errors }">
+      <option *ngFor="let cidade of listaCidades" [value]="cidade.nome">
+        {{ cidade.nome }}
+      </option>
+    </select>
+  </div>
+  <div class="col-12">
+    <label class="form-label">Rua</label>
+    <input type="text" class="form-control" formControlName="street"
+    [ngClass]="{ 'is-invalid': profileSubmitted && address.street?.errors }" />
+  </div>
+  <div class="col-2">
+    <label class="form-label">Número</label>
+    <input type="text" class="form-control" formControlName="houseNumber"
+    [ngClass]="{ 'is-invalid': profileSubmitted && address.houseNumber?.errors }" />
+  </div>
+  <div class="col-6">
+    <label class="form-label">Complemento</label>
+    <input type="text" class="form-control" formControlName="reference"
+    [ngClass]="{ 'is-invalid': profileSubmitted && address.reference?.errors }" />
+  </div>
+  <div class="col-4">
+    <label class="form-label">Bairro</label>
+    <input type="text" class="form-control" formControlName="district"
+    [ngClass]="{ 'is-invalid': profileSubmitted && address.district?.errors }" />
+  </div>
+</div>
+  <div class="col-12">
+      <div class="form-group text-center">
+        <button type="button" class="btn btn-primary me-2" (click)="onUpdateProfile()">
+          <span *ngIf="isLoadingProfile" class="spinner-border spinner-border-sm mr-1"></span>Atualizar
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="onResetProfile()">
+          Cancelar
+        </button>
+      </div>
     </div>
   </form>
   <div *ngIf="errorProfile" class="alert alert-danger mt-3 mb-0 p-1">
