@@ -26,14 +26,22 @@ export class OrderService {
   }
 
   add(produto: Product) {
-    console.log(produto.name);
     this.load();
     this.orders.push(produto);
     this._length.next(this.orders.length);
     window.sessionStorage.setItem(ORDER_KEY, JSON.stringify(this.orders));
   }
 
-  // remove(produto) {
+  remove(produto: Product) {
+    let index = this.orders.indexOf(produto);
+    this.orders.splice(index-1,1);
+    this._length.next(this.orders.length);
+    window.sessionStorage.setItem(ORDER_KEY, JSON.stringify(this.orders));
+  }
 
-  // }
+  clear() {
+    window.sessionStorage.removeItem(ORDER_KEY);
+    this.orders = [];
+    this._length.next(0);
+  }
 }

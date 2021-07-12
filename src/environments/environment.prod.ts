@@ -6,7 +6,8 @@ export const environment = {
   cidadesEndpoint: 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
   corsAuthenticationIgnore: ['http://viacep.com.br/', 'https://servicodados.ibge.gov.br/'],
   startPage: 'products',
-  nomeEmpresa: 'IFPR Pizzeria Product',
+  nomeEmpresa: 'IFPR Pizzeria',
   enderecoEmpresa: 'Via Colina Spaccanapoli, 1977',
-  telefoneEmpresa: '(41) 3333-3333'
+  telefoneEmpresa: '(41) 3333-3333',
+  emailEmpresa: 'none@ifprpizzeria.com'
 };

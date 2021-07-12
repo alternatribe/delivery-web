@@ -8,6 +8,7 @@ export const environment = {
   startPage: 'products',
   nomeEmpresa: 'IFPR Pizzeria',
   enderecoEmpresa: 'Via Colina Spaccanapoli, 1977',
-  telefoneEmpresa: '(41) 3333-3333'
+  telefoneEmpresa: '(41) 3333-3333',
+  emailEmpresa: 'none@ifprpizzeria.com'
 };
 

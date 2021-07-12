@@ -8,7 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { StorageService } from '../services/storage.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { environment } from '../../environments/environment.prod';
+import { environment } from '../../environments/environment';
 
 const TOKEN_HEADER_KEY = 'Authorization';
 const MATCH = environment.corsAuthenticationIgnore;

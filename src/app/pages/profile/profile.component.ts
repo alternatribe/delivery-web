@@ -76,7 +76,7 @@ export class ProfileComponent implements OnInit {
     );
     this.utilService.getEstadosJson().subscribe(lista => {
       this.listaEstados = lista;
-      this.listaEstados.sort((a, b) => a.nome.localeCompare(b.nome))
+      this.listaEstados.sort((a, b) => a.nome.localeCompare(b.nome));
     });
 
     this.formProfile.get("address.state")?.valueChanges.subscribe(uf => {
