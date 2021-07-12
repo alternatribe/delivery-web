@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
@@ -10,7 +10,7 @@ import { Estado } from '../../models/estado.model';
 import { Cidade } from '../../models/cidade.model';
 import { UtilService } from '../../share/services/util.service';
 import { Address } from '../../models/address.model';
-import { EMPTY, Observable, BehaviorSubject } from 'rxjs';
+import { EMPTY, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import FormValidator from '../../share/form.validator';
 
 
@@ -19,7 +19,7 @@ import FormValidator from '../../share/form.validator';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
 
   formProfile: FormGroup;
   formPassword: FormGroup;
@@ -38,6 +38,13 @@ export class ProfileComponent implements OnInit {
 
   listaEstados: Estado[] = [];
   listaCidades: Cidade[] = [];
+  userInscription: Subscription = new Subscription;
+  statesInscription: Subscription = new Subscription;
+  userProfileInscription: Subscription = new Subscription;
+  userPasswordInscription: Subscription = new Subscription;
+  userDeleteInscription: Subscription = new Subscription;
+  cityInscription: Subscription = new Subscription;
+  cepInscription: Subscription = new Subscription;
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private userService: UserService, private modalService: ModalService, private utilService: UtilService) {
 
@@ -65,23 +72,33 @@ export class ProfileComponent implements OnInit {
       });
   }
 
+  ngOnDestroy(): void {
+    this.userInscription.unsubscribe();
+    this.statesInscription.unsubscribe();
+    this.cityInscription.unsubscribe();
+    this.userProfileInscription.unsubscribe();
+    this.userPasswordInscription.unsubscribe();
+    this.userDeleteInscription.unsubscribe();
+    this.cepInscription.unsubscribe();
+  }
+
   ngOnInit(): void {
     this.isLogged = this.authService.isLogged();
 
-    this.userService.details(this.authService.getUser().id).subscribe(
+    this.userInscription = this.userService.details(this.authService.getUser().id).subscribe(
       (user) => {
         this.currentUser = user;
         this.formProfile.patchValue(user);
       }
     );
-    this.utilService.getEstadosJson().subscribe(lista => {
+    this.statesInscription = this.utilService.getEstadosJson().subscribe(lista => {
       this.listaEstados = lista;
       this.listaEstados.sort((a, b) => a.nome.localeCompare(b.nome));
     });
 
     this.formProfile.get("address.state")?.valueChanges.subscribe(uf => {
       if (uf) {
-        this.utilService.getMunicipios(uf).subscribe(lista => {
+        this.cityInscription = this.utilService.getMunicipios(uf).subscribe(lista => {
           this.listaCidades = lista;
           this.listaCidades.sort((a, b) => a.nome.localeCompare(b.nome));
           this.address.controls.city.enable();
@@ -114,7 +131,7 @@ export class ProfileComponent implements OnInit {
     this.isLoadingProfile = true;
     this.newUser = Object.assign({}, this.formProfile.value);
     this.newUser.id = this.currentUser.id;
-    this.userService.update(this.newUser).subscribe(
+    this.userProfileInscription = this.userService.update(this.newUser).subscribe(
       () => {
         this.isLoadingProfile = false;
         this.modalService.open('confirm-modal');
@@ -143,7 +160,7 @@ export class ProfileComponent implements OnInit {
     console.log(this.fp);
     this.newUser.password = this.fp.password.value;
     this.newUser.newPassword = this.fp.newPassword.value;
-    this.userService.update(this.newUser).subscribe(
+    this.userPasswordInscription = this.userService.update(this.newUser).subscribe(
       () => {
         this.isLoadingPassword = false;
         this.modalService.open('confirm-modal');
@@ -167,7 +184,7 @@ export class ProfileComponent implements OnInit {
   }
 
   onExcluir() {
-    this.userService.delete(this.currentUser.id).subscribe(
+    this.userDeleteInscription = this.userService.delete(this.currentUser.id).subscribe(
       () => {
         this.authService.logout();
         this.modalService.open('remove-modal');
@@ -225,7 +242,7 @@ export class ProfileComponent implements OnInit {
     this.profileSubmitted = true;
     let cep: string = (this.formProfile.controls.address.value).zip;
     if (cep != null && cep !== '') {
-      this.utilService.buscaCEP(cep)
+      this.cepInscription = this.utilService.buscaCEP(cep)
         .subscribe((dados) => {
           if (dados.hasOwnProperty("erro")) {
             this.address.reset();

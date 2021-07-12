@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { environment } from '../environments/environment';
 import { Router } from '@angular/router';
@@ -10,7 +11,7 @@ import { OrderService } from './services/order.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy{
 
   nomeEmpresa: string = "";
   enderecoEmpresa: string = "";
@@ -19,12 +20,20 @@ export class AppComponent {
   homeIsProducts: boolean = false;
 
   username: string = "";
-  orders: number = 9;
+  orders: number = 0;
+
+  authInscription: Subscription = new Subscription;
+  orderInscription: Subscription = new Subscription;
 
   constructor(private authService: AuthService, private orderService: OrderService, private router: Router) {
     this.nomeEmpresa = environment.nomeEmpresa;
     this.enderecoEmpresa = environment.enderecoEmpresa;
     this.telefoneEmpresa = environment.telefoneEmpresa;
+  }
+
+  ngOnDestroy(): void {
+    this.authInscription.unsubscribe();
+    this.orderInscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -37,7 +46,7 @@ export class AppComponent {
       this.username = this.authService.getUser().name;
     }
 
-    this.authService.isAuthenticate$.subscribe(auth => {
+    this.authInscription = this.authService.isAuthenticate$.subscribe(auth => {
       this.isLoggedIn = auth;
       if (this.authService.isLogged()) {
         this.isLoggedIn = true;
@@ -45,7 +54,7 @@ export class AppComponent {
       }
     });
 
-    this.orderService.orders_length.subscribe(length => {
+    this.orderInscription = this.orderService.orders_length.subscribe(length => {
       this.orders = length;
     });
 
