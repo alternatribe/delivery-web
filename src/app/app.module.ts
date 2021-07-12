@@ -22,6 +22,7 @@ import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ModalModule } from './share/modal/modal.module';
+import { ProductCardComponent } from './share/product-card/product-card.component';
 
 registerLocaleData(localePt);
 
@@ -38,7 +39,8 @@ registerLocaleData(localePt);
     PageNotFoundComponent,
     OrderComponent,
     MyOrdersComponent,
-    RolePipe
+    RolePipe,
+    ProductCardComponent
   ],
   imports: [
     BrowserModule,

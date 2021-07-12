@@ -3,6 +3,7 @@ import { AuthService } from './services/auth.service';
 import { environment } from '../environments/environment';
 import { Router } from '@angular/router';
 import { RoleEnum } from './models/role.enum';
+import { OrderService } from './services/order.service';
 
 @Component({
   selector: 'app-root',
@@ -18,8 +19,9 @@ export class AppComponent {
   homeIsProducts: boolean = false;
 
   username: string = "";
+  orders: number = 9;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private orderService: OrderService, private router: Router) {
     this.nomeEmpresa = environment.nomeEmpresa;
     this.enderecoEmpresa = environment.enderecoEmpresa;
     this.telefoneEmpresa = environment.telefoneEmpresa;
@@ -41,6 +43,10 @@ export class AppComponent {
         this.isLoggedIn = true;
         this.username = this.authService.getUser().name;
       }
+    });
+
+    this.orderService.orders_length.subscribe(length => {
+      this.orders = length;
     });
 
   }

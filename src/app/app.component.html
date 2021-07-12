@@ -69,10 +69,13 @@
             </span>
           </li>
           <li class="nav-item collapse navbar-collapse">
-            <a class="nav-link p-0 ps-4" routerLink="order"><i class="bi bi-basket3 fs-3 text-white"></i></a>
+            <a class="nav-link p-0 ps-4" routerLink="order">
+              <span class="text-order" *ngIf="orders > 0 && orders < 99">{{orders}}</span>
+              <span class="text-order" *ngIf="orders > 99">X</span>
+              <i class="bi bi-basket3 fs-3 text-white"></i></a>
           </li>
           <li class="nav-item p-0 border-0 d-md-none" [ngClass]="{'pt-2 ': isLoggedIn}">
-            <a class="nav-link" routerLink="order">Meu Pedido</a>
+            <a class="nav-link" routerLink="order">Meu Pedido <span class="text-white" *ngIf="orders > 0">({{orders}})</span></a>
           </li>
         </ul>
       </div>

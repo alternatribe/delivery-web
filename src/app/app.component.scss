@@ -1,0 +1,24 @@
+.text-order{
+    z-index: 100;
+    position: absolute;
+    top: 27px;
+    right: 20px;
+    color: white;
+    font-weight: bolder;
+    font-size: 0.7rem !important;
+}
+
+@media (max-width: 1200px) {
+  .text-order{
+      top: 26px;
+      right: 19px;
+  }
+}
+
+@media (max-width: 944px) {
+  .text-order{
+      top: 25px;
+      right: 18px;
+  }
+}
+
