@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../models/product.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { take, catchError } from 'rxjs/operators';
 
 const ORDER_KEY = 'order';
+const apiUrl = environment.mainEndpoint;
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +20,7 @@ export class OrderService {
   private _length = new BehaviorSubject<number>(0);
   orders_length = this._length.asObservable();
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this._length.next(this.load().length);
   }
 
@@ -42,6 +49,24 @@ export class OrderService {
   clear() {
     window.sessionStorage.removeItem(ORDER_KEY);
     this.orders = [];
-    this._length.next(0);
+    this._length.next(this.orders.length);
   }
+
+
+  recorder(id: string, order: Product[]): Observable<any> {
+    return this.http.post(apiUrl + `/order/${id}`, order, httpOptions)
+      .pipe(
+        catchError((err) => {
+          console.log('error caught in service')
+          console.error(err);
+          return throwError(err);
+        })
+      );
+  }
+
+  list(): Observable<Product[]> {
+    return this.http.get<Product[]>(apiUrl + `/product/`);
+  }
+
+
 }

@@ -10,7 +10,7 @@ import { Estado } from '../../models/estado.model';
 import { Cidade } from '../../models/cidade.model';
 import { UtilService } from '../../share/services/util.service';
 import { Address } from '../../models/address.model';
-import { EMPTY, Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import FormValidator from '../../share/form.validator';
 
 

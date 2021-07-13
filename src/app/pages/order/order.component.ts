@@ -4,6 +4,8 @@ import { Product } from '../../models/product.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { ModalService } from '../../share/modal/modal.service';
 
 @Component({
   selector: 'app-order',
@@ -16,7 +18,7 @@ export class OrderComponent implements OnInit, OnDestroy{
   total: number = 0;
   orderInscription: Subscription = new Subscription;
 
-  constructor(private orderService: OrderService, private router: Router, private authService: AuthService, private activatedRoute: ActivatedRoute) { }
+  constructor(private orderService: OrderService, private router: Router, private authService: AuthService, private activatedRoute: ActivatedRoute, private modalService: ModalService) { }
 
   ngOnDestroy(): void {
     this.orderInscription.unsubscribe();
@@ -43,7 +45,10 @@ export class OrderComponent implements OnInit, OnDestroy{
     if (!this.authService.isLogged()) {
       this.router.navigate(["login"], {queryParams: {'refresh': 'order'}});
     } else {
-      console.log("sending orders....");
+      this.orderService.recorder(this.authService.getUser().id, this.listaPedido)
+        .subscribe(
+          () => window.alert("Pedido realizado com sucesso!!!")
+        );
       this.cancelar();
     }
   }
